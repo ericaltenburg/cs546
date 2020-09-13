@@ -1,0 +1,15 @@
+{
+  "name": "lec2",
+  "version": "1.0.0",
+  "description": "This is our first module example",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Eric Altenburg",
+  "license": "MIT",
+  "dependencies": {
+    "prompt": "^1.0.0"
+  }
+}
