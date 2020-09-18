@@ -1,4 +1,7 @@
 const arrayUtils = require('./arrayUtils');
+const stringUtils = require('./stringUtils');
+
+// ----------------------------------------------------------------------------
 
 // arrayUtils
 console.log("┌──────────────────┐");
@@ -65,3 +68,95 @@ try { //FAIL
 	console.log(`\tFill failed successfully: ${e}`);
 }
 
+console.log("\ncountRepeating Pass Example:");
+try { //PASS
+	const exCountOne = arrayUtils.countRepeating([7, '7', 13, true, true, true, "Hello","Hello", "hello", false, "jazz", 7, 12, false, 'hello']);
+	console.log("\tcountRepeating passed successfully: " , exCountOne);
+} catch (e) {
+	console.log(`\tcountRepeating failed test case: ${e}`);
+}
+console.log("countRepeating Fail Example:");
+try { //FAIL
+	const exCountTwo = arrayUtils.countRepeating("array");
+	console.log("\tThis was supposed to fail:" , exCountTwo);
+} catch (e) {
+	console.log(`\tcountRepeating failed successfully: ${e}`);
+}
+
+console.log("\nisEqual Pass Example:");
+try { //PASS
+	const exEqualOne = arrayUtils.isEqual([[ 1, 2, 3, '10' ], [ 4, 5, 6 ], [ 7, '8', 9 ]], [[ 3, 1, '10', 2 ], [ 5, 4, 6 ], [ 9, 7, '8']]);
+	console.log("\tisEqual passed successfully: " , exEqualOne);
+} catch (e) {
+	console.log(`\tisEqual failed test case: ${e}`);
+}
+console.log("isEqual Fail Example:");
+try { //FAIL
+	const exEqualTwo = arrayUtils.isEqual();
+	console.log("\tThis was supposed to fail:" , exEqualTwo);
+} catch (e) {
+	console.log(`\tisEqual failed successfully: ${e}`);
+}
+
+// ----------------------------------------------------------------------------
+
+console.log();
+
+// stringUtils
+console.log("┌───────────────────┐");
+console.log("│ stringUtils Tests │");
+console.log("└───────────────────┘");
+
+console.log("\ncamelCase Pass Example:");
+try { //PASS
+	const exCamelOne = stringUtils.camelCase('The quick Brown fox Jumps ');
+	console.log("\tcamelCase passed successfully: " , exCamelOne);
+} catch (e) {
+	console.log(`\tcamelCase failed test case: ${e}`);
+}
+console.log("camelCase Fail Example:");
+try { //FAIL
+	const exCameTwo = stringUtils.camelCase('');
+	console.log("\tThis was supposed to fail:" , exCamelTwo);
+} catch (e) {
+	console.log(`\tcamelCase failed successfully: ${e}`);
+}
+
+console.log("\nreplaceChar Pass Example:");
+try { //PASS
+	const exRepOne = stringUtils.replaceChar("Bumble bees barely buzzing in bushes");
+	console.log("\treplaceChar passed successfully: " , exRepOne);
+} catch (e) {
+	console.log(`\treplaceChar failed test case: ${e}`);
+}
+console.log("replaceChar Fail Example:");
+try { //FAIL
+	const exRepTwo = stringUtils.replaceChar('');
+	console.log("\tThis was supposed to fail:" , exRepTwo);
+} catch (e) {
+	console.log(`\treplaceChar failed successfully: ${e}`);
+}
+
+console.log("\nmashUP Pass Example:");
+try { //PASS
+	const exMashOne = stringUtils.mashUp("hello", "world");
+	console.log("\tmashUp passed successfully: " , exMashOne);
+} catch (e) {
+	console.log(`\tmashUp failed test case: ${e}`);
+}
+console.log("mashUp Fail Example:");
+try { //FAIL
+	const exMashTwo = stringUtils.mashUp('1', 'jail');
+	console.log("\tThis was supposed to fail:" , exMashTwo);
+} catch (e) {
+	console.log(`\tmashUp failed successfully: ${e}`);
+}
+
+// ----------------------------------------------------------------------------
+
+console.log();
+
+// objUtils
+console.log("┌────────────────┐");
+console.log("│ objUtils Tests │");
+console.log("└────────────────┘");
