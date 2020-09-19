@@ -106,6 +106,24 @@ function countRepeating (arr) {
 	return ans;
 }
 
+function compSort (a, b) {
+	if (typeof a === 'number' && typeof b === 'string') { // Prioritize numbers
+		return -1;
+	} else if (typeof b === 'number' && typeof a === 'string') {
+		return 1;
+	} else if (typeof a === 'boolean' && typeof b === 'string') { // Prioritize booleans
+		return -1;
+	} else if (typeof b === 'boolean' && typeof a === 'string') {
+		return 1;
+	} else if (Array.isArray(a) && !Array.isArray(b)) { // Prioritize non-arrays
+		return 1;
+	} else if (!Array.isArray(a) && Array.isArray(b)) {
+		return -1;
+	} else { // Sort based on numbers so that it goes 1, 2, 10 and not 1, 10, 2
+		return a-b;
+	}
+}
+
 function isEqual(arr1, arr2) {
 	checkIsProperArr(arr1, false);
 	checkIsProperArr(arr2, false);
@@ -114,8 +132,62 @@ function isEqual(arr1, arr2) {
 		return false;
 	}
 
+	// Don't mind this disgusting comparison function, because I hate the OG sort function
+	// I had to prioritize certain types so some get sorted before others, this way the two
+	// arrays will be the same (with the exception of the inner arrays not being sorted
+	// immediately). So I make numbers go before strings (623 vs '623'), bools before strings 
+	// (false vs 'false'), and non-arrays before arrays. If you want to see the complete and
+	// utter hot garbage I wrote trying to figure out different ways to do this, check out
+	// the big commented section below the sorting lol rip 4 hours of my life
+
 	arr1.sort();
 	arr2.sort();
+
+	arr1.sort(compSort);
+	arr2.sort(compSort);
+
+	/* ----------------------------------------------------------------------
+	// pick and choose if same delete from both arrays, if both are empty by end return tru else false
+
+	// let i = 0;
+	// while (i < arr1.length) {
+	// 	let item1 = arr1[i];
+
+	// 	let j = i;
+	// 	while (j < arr2.length) {
+	// 		if (Array.isArray(item1) && Array.isArray(arr2[j])) { // the two items are an array, then do a recursive call
+	// 			if (!isEqual(item1, arr2[j])) {
+	// 				return false;
+	// 			} else {
+	// 				break;
+	// 			}
+	// 		} 
+			
+	// 		if (arr2[j] === item1) { // if it's the same item, them remove it
+	// 			arr2.splice(j, 1);
+	// 			arr1.splice(i, 1);
+	// 			i--;
+	// 			break;
+	// 		}
+	// 		j++;
+	// 	}
+	// 	i++;
+	// }
+
+	// if (arr1.length === arr2.length) {
+	// 	for (let k = 0; k < arr1.length; k++) {
+			
+	// 		if (arr1[k].length !== 0 && arr2[k].length !== 0) {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return true;
+	// } else {
+	// 	return false;
+	// }
+	// console.log(arr1);
+	// console.log(arr2);
+	---------------------------------------------------------------------- */ 
 
 	for (let i = 0; i < arr1.length; i++) {
 		if (arr1[i] !== arr2[i]) {

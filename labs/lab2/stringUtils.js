@@ -2,6 +2,7 @@ function checkIsProperString (str, length) {
 	if (str === undefined || str === null) throw `Error: string does not exist`;
 	if (typeof str !== 'string') throw `Error: argument is not an string`;
     if (str.length <= length) throw `Error: string is not of length`;
+    if (!str.replace(/\s/g, '').length) throw `Error: string is just white space`;
 }
 
 function camelCase(str) {
