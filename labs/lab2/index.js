@@ -74,7 +74,8 @@ try { //FAIL
 
 console.log("\ncountRepeating Pass Example:");
 try { //PASS
-	const exCountOne = arrayUtils.countRepeating([7, '7', 13, true, true, true, "Hello","Hello", "hello", false, "jazz", 7, 12, false, 'hello']);
+	const exCountOne = arrayUtils.countRepeating([7, '7',1, 13, true, true, true, "Hello","Hello", true, "hello", false, '1', "jazz", 7, 12, false, 'hello']);
+	// const exCountOne = arrayUtils.countRepeating(["CS", "CS", 1, 234, 3, 2, "1", "1", "1", "3", true, true, true, true]);
 	console.log("\tSUCCESS: " , exCountOne);
 } catch (e) {
 	console.log(`\tFAIL: ${e}`);
@@ -119,7 +120,7 @@ console.log("└───────────────────┘");
 
 console.log("\ncamelCase Pass Example:");
 try { //PASS
-	const exCamelOne = stringUtils.camelCase('  The quick Brown fox Jumps ');
+	const exCamelOne = stringUtils.camelCase('  The quiCk BroWn fOx JumPs ');
 	console.log("\tSUCCESS: " , exCamelOne);
 } catch (e) {
 	console.log(`\tFAIL: ${e}`);
@@ -135,7 +136,8 @@ try { //FAIL
 
 console.log("\nreplaceChar Pass Example:");
 try { //PASS
-	const exRepOne = stringUtils.replaceChar("Bumble bees barely buzzing in bushes");
+	// const exRepOne = stringUtils.replaceChar("Bumble bees barely buzzing in bushes");
+	const exRepOne = stringUtils.replaceChar(" aaa aaaa ");
 	console.log("\tSUCCESS: " , exRepOne);
 } catch (e) {
 	console.log(`\tFAIL: ${e}`);

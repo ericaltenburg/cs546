@@ -5,8 +5,13 @@ function checkIsProperString (str, length) {
     if (!str.replace(/\s/g, '').length) throw `Error: string is just white space`;
 }
 
+
+
 function camelCase(str) {
     checkIsProperString(str, 0);
+
+    str = str.toLowerCase();
+    console.log(str);
 
     let splitStr = str.split(" ");
 
@@ -22,6 +27,13 @@ function camelCase(str) {
 
 function replaceChar(str) {
     checkIsProperString(str, 0);
+
+    // remove spaces in beginning if there are any 
+    let ogLen = str.length;
+    str = str.trimStart(); // remove leading white spaces
+    let newLen = str.length;
+    let count = ogLen - newLen;
+
     let decideChar = false;
     let firstUpper = str.charAt(0).toUpperCase();
     let firstLower = str.charAt(0).toLowerCase();
@@ -38,7 +50,14 @@ function replaceChar(str) {
         }
     }
 
-    return letters.join("");
+    let newStr = letters.join("");
+
+    let spaces = "";
+    for (let i = 0; i < count; i++) {
+        spaces = spaces + " ";
+    }
+
+    return spaces + newStr;
 }
 
 function mashUp (str1, str2) {

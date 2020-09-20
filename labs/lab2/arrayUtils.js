@@ -23,7 +23,8 @@ function mean (arr) {
 	for (let i = 0; i < arrLen; i++) {
 		sum += arr[i];
 	}
-	return sum/arrLen;
+	let ans = sum/arrLen;
+	return parseFloat(ans.toFixed(2), 10);
 }
 
 function medianSquared (arr) {
@@ -84,15 +85,24 @@ function countRepeating (arr) {
 
 	for (let i = 0; i < arr.length; i++) {
 		let isRepeat = false;
+		let item = arr[i];
 		for (let j = 0; j < entry.length; j++) {
-			if (entry[j] == arr[i]) {
+			let item2 = entry[j];
+			if (typeof item === 'number') {
+				item = item.toString();
+			}
+			if (typeof item2 === 'number') {
+				item2 = item2.toString();
+			}
+			if (item === item2) {
 				count[j]++;
 				isRepeat = true;
+				break;
 			}
 		}
 
 		if (!isRepeat) {
-			entry.push(arr[i]);
+			entry.push(item);
 			count.push(1);
 		}
 	}
