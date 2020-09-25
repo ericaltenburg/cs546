@@ -1,0 +1,15 @@
+{
+  "name": "cs546-lab3",
+  "version": "1.0.0",
+  "description": "cs546 lab 3 async/await",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Altenburg 10443481",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0"
+  }
+}
