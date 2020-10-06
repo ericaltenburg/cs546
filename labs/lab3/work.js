@@ -131,7 +131,7 @@ async function whereDoTheyWork (ssn) {
         }
     });
 
-    return str;
+    return str + ".";
 }
 
 module.exports = {
