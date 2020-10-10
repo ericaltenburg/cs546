@@ -43,7 +43,8 @@ router.get('/', async (req, res) => {
         const showings = await getShows();
         res.json(showings);
     } catch (e) {
-        res.status(500).send();
+        // res.status(500).send();
+        res.status(500).json({error: e});
     }
 });
 
@@ -55,7 +56,7 @@ router.get('/:id', async (req, res) => {
         const show = await getShowById(req.params.id);
         res.json(show);
     } catch (e) {
-        res.status(404).json({message: `Show with that ID cannot be found. ${e}.`});
+        res.status(404).json({error: `Show with that ID cannot be found. ${e}.`});
     }
 });
 
