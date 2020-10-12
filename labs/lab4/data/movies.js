@@ -178,13 +178,16 @@ async function remove(id) {
     const moviesCollection = await movies();
 
     const deletedMovie = await get(id);
+    let name = deletedMovie.title;
     id = ObjectId(id);
 
     const deletionInfo = await moviesCollection.deleteOne({_id: id});
 
     if (deletionInfo.deletedCount === 0) throw `Error: could not delete movie with id ${id}`;
+    
 
-    return deletedMovie;
+
+    return `${name} has been successfully deleted.`;
 
 }
 
