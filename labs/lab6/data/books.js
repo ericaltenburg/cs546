@@ -15,20 +15,44 @@ function checkIsProperString (str) {
 }
 
 /**
- * Verifies the array input, and has at least one element that is valid string
+ * Verifies the array input, and has at least one element that is valid string, also
+ * checks for duplicates
  * @param {Array} arr 
  */
 function checkIsProperArr (arr) {
 	if (arr === undefined || arr === null) throw `Error: array does not exist`;
 	if (!Array.isArray(arr)) throw `Error: argument is not an array`;
     if (arr.length === 0) throw `Error: array is empty`;
-    for (let i = 0; i < arr.length; i++) {
-        if (typeof arr[i] !== 'string') {
-            throw `Error: ${arr[i]} is not a string`;
+
+    let seen = [];
+
+    arr.forEach( (value) => {
+        if (typeof value !== 'string') {
+            throw `Error: ${value} is not a string`;
         } else {
-            checkIsProperString(arr[i]);
+            checkIsProperString(value);
+        }
+
+        if (seen[value]) {
+            throw `Error: duplicates found`;
+        } else {
+            seen[value] = true;
+        }
+    });
+}
+
+/**
+ * Checks to see if object is empty
+ * @param {object} obj 
+ */
+function isEmpty (obj) {
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            return false;
         }
     }
+
+    return true;
 }
 
 /**
@@ -55,23 +79,22 @@ function checkIsProperDate (date) {
 }
 
 /**
- * 
- * @param {string} title 
- * @param {Object} author 
- * @param {array} genre 
- * @param {date} datePublished 
- * @param {string} summary 
- * @param {array} reviews 
+ * Creates a book with the given object
+ * @param {Object} obj 
  */
-async function create (title, author, genre, datePublished, summary, reviews) {
+async function create (obj) {
+    let title = obj.title;
     checkIsProperString(title);
     title = title.trimStart();
+    let author = obj.author;
     checkIsProperObj(author);
+    let genre = obj.genre;
     checkIsProperArr(genre);
+    let datePublished = obj.datePublished;
     checkIsProperDate(datePublished); // This might not work js
+    let summary = obj.summary;
     checkIsProperString(summary);
     summary = summary.trimStart();
-    checkIsProperArr(reviews);
 
     const booksCollection = await books();
 
@@ -80,8 +103,8 @@ async function create (title, author, genre, datePublished, summary, reviews) {
         author,
         genre,
         datePublished,
-        summarry,
-        reviews
+        summary,
+        'reviews': []
     };
 
     const insertInfo = await booksCollection.insertOne(newBook);
@@ -120,14 +143,22 @@ async function getAll() {
 
     const booksList = await booksCollection.find({}).toArray();
 
+    let idAndTitle = [];
+
     booksList.forEach( (value) => {
         value['_id'] = "" + value['_id'];
+
+        idAndTitle.push({
+            '_id': value['_id'],
+            'title': value['title']});
     });
 
-    return booksList;
+    return idAndTitle;
 }   
 
-
+/**
+ * Updates the book entry with new data
+ */
 async function update () {
     console.log("IMPLEMENT ME");
 }

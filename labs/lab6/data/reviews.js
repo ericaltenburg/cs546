@@ -14,37 +14,6 @@ function checkIsProperString (str) {
 }
 
 /**
- * Verifies the array input, and has at least one element that is valid string
- * @param {Array} arr 
- */
-function checkIsProperArr (arr) {
-	if (arr === undefined || arr === null) throw `Error: array does not exist`;
-	if (!Array.isArray(arr)) throw `Error: argument is not an array`;
-    if (arr.length === 0) throw `Error: array is empty`;
-    for (let i = 0; i < arr.length; i++) {
-        if (typeof arr[i] !== 'string') {
-            throw `Error: ${arr[i]} is not a string`;
-        } else {
-            checkIsProperString(arr[i]);
-        }
-    }
-}
-
-/**
- * Checks to make sure the object is valid and has the first and last name
- * @param {Object} obj 
- */
-function checkIsProperObj (obj) {
-    if (obj === undefined || obj === null) throw `Error: object does not exist`;
-    if (typeof obj !== 'object' || obj === null) throw `Error: ${obj} is not an object`;
-    if (isEmpty(obj)) throw "Error: object is empty";
-    if (!("authorFirstName" in obj)) throw `Error: object is missing author's first name`;
-    checkIsProperString(obj['authorFirstName']);
-    if (!("authorLastName" in obj)) throw `Error: object is missing author's last name`;
-    checkIsProperString(obj['authorLastName']);
-}
-
-/**
  * Checks to make sure the Date is of valid format using moment.js
  * @param {Date} date 
  */
