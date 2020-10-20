@@ -123,14 +123,17 @@ async function getAll (id) {
         value['_id'] = "" + value['_id'];
     });
 
+    if (reviewsList.length === 0) throw `No reviews round for the book`;
+
     return reviewsList;
 }
 
 /**
  * Removes the string at the specified id from the database
  * @param {string} id 
+ * @param {boolean} removeBookToo
  */
-async function remove (id) {
+async function remove (id, removeBookToo) {
     checkIsProperString(id);   
     id = id.trimStart();
     
@@ -140,28 +143,29 @@ async function remove (id) {
     let bookId = deletedReview.bookBeingReviewed;
     id = ObjectId(id);
 
-    const deletedInfo = await reviewsCollection.removeOne({_id: id});
+    const deletedInfo = await reviewsCollection.deleteOne({_id: id});
     if (deletedInfo.deletedCount === 0) throw `Error: could not delete the book with the id ${id}`;
     id = "" + id;
 
+    if (removeBookToo) {
+        const booksData = require('./books'); // Gotta love the dependency loops
+
+        const booksCollection = await books();
+        let bookRemovedReview = await booksData.get(bookId);
     
-    const booksData = require('./books'); // Gotta love the dependency loops
-
-    const booksCollection = await books();
-
-    let bookRemovedReview = await booksData.get(bookId);
-    bookRemovedReview.reviews = bookRemovedReview.reviews.filter( (value) => {
-        return value !== id;
-    });
-
-
-    bookId = ObjectId(bookId);
-    const updateInfo = await booksCollection.updateOne(
-        {_id: bookId},
-        {$set: {reviews: bookRemovedReview.reviews}}
-    );
-    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
-
+        bookRemovedReview.reviews = bookRemovedReview.reviews.filter( (value) => {
+            return value !== id;
+        });
+    
+    
+        bookId = ObjectId(bookId);
+        const updateInfo = await booksCollection.updateOne(
+            {_id: bookId},
+            {$set: {reviews: bookRemovedReview.reviews}}
+        );
+        if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
+    }
+    
     return {
         "reviewId": id,
         "deleted": true

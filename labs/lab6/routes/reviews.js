@@ -15,7 +15,7 @@ router.get('/:id', async (req, res) => {
         const reviewsList = await reviewsData.getAll(req.params.id);
         res.status(200).json(reviewsList);
     } catch (e) {
-        res.status(404).json({error: "Book with that id could not be found"});
+        res.status(404).json({error: "No reviews found for that book"});
     }
 });
 
@@ -56,6 +56,7 @@ router.post('/:id', async (req, res) => {
         await booksData.get(reviewData.bookBeingReviewed);
     } catch (e) {
         res.status(400).json({error: "Book not found with that id."})
+        return;
     }
 
     try {
@@ -87,7 +88,7 @@ router.delete('/:tag/:id', async (req, res) => {
     }
     
     try {
-        const removedReview = await reviewsData.remove(req.params.id);
+        const removedReview = await reviewsData.remove(req.params.id, true);
         res.status(200).json(removedReview);
     } catch (e) {
         res.status(500).json({error: e})

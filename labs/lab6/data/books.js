@@ -1,5 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const books = mongoCollections.books;
+const reviews = mongoCollections.reviews;
 const moment = require('moment');
 let { ObjectId } = require('mongodb');
 const reviewsData = require('./reviews');
@@ -229,7 +230,7 @@ async function update (id, obj) {
     if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
     
     id = "" + id;
-    return this.get(id);
+    return await this.get(id);
 }
 
 /**
@@ -246,8 +247,8 @@ async function remove (id) {
     let reviewsToDelete = deletedBook.reviews;
     id = ObjectId(id);
 
-    reviewsToDelete.forEach( (id) => { // remove the reviews
-        reviewsData.remove(id);
+    reviewsToDelete.forEach( async (id1) => { // remove the reviews
+        await reviewsData.remove(id1, false);
     });
 
     const deletedInfo = await booksCollection.deleteOne({_id: id});
