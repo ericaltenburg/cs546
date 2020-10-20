@@ -1,7 +1,9 @@
 const mongoCollections = require('../config/mongoCollections');
 const reviews = mongoCollections.reviews;
+const books = mongoCollections.books;
 const moment = require('moment');
 let { ObjectId } = require('mongodb');
+const booksData = require('./books');
 
 /**
  * Verifies the string input
@@ -69,7 +71,19 @@ async function create (title, reviewer, bookBeingReviewed, rating, dateOfReview,
 
     const newId = insertInfo.insertedId + "";
 
-    const aReview = await this.get(newId);
+    const booksCollection = await books();
+    
+    let bookReviewed = await booksData.get(bookBeingReviewed);
+    bookReviewed.reviews.push(newId);
+
+    const updateInfo = await booksCollection.updateOne(
+        {_id: bookBeingReviewed},
+        {$set: {reviews: bookReviewed.reviews}}
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
+
+    const aReview = await this.getById(newId);
+
     return aReview;
 }
 
@@ -77,7 +91,7 @@ async function create (title, reviewer, bookBeingReviewed, rating, dateOfReview,
  * grabs review by string
  * @param {string} id 
  */
-async function get (id) {
+async function getById (id) {
     checkIsProperString(id);
     id = id.trimStart();
     id = ObjectId(id).valueOf();
@@ -93,12 +107,13 @@ async function get (id) {
 }
 
 /**
- * Returns al the reviews in the database
+ * Returns al the reviews in the database for a given book id
+ * @param {string} id
  */
-async function getAll () {
+async function getAll (id) {
     const reviewsCollection = await reviews();
 
-    const reviewsList = await reviewsCollection.find({}).toArray();
+    const reviewsList = await reviewsCollection.find({bookBeingReviewed: id}).toArray();
 
     reviewsList.forEach( (value) => {
         value['_id'] = "" + value['_id'];
@@ -117,19 +132,37 @@ async function remove (id) {
     
     const reviewsCollection = await reviews();
 
-    const deletedReview = await get(id);
-    let name = deletedReview.title;
+    const deletedReview = await getById(id);
+    let bookId = deletedReview.bookBeingReviewed;
     id = ObjectId(id);
     
     const deletedInfo = await reviewsCollection.deletedOne({_id: id});
     if (deletedInfo.deletedCount === 0) throw `Error: could not delete the book with the id ${id}`;
 
-    return `${name} has successfully been deleted.`;
+    const booksCollection = await books();
+
+    let bookRemovedReview = await booksData.getById(bookId);
+    bookRemovedReview.reviews = bookRemovedReview.reviews.filter( (value) => {
+        return value !== id;
+    });
+
+    const updateInfo = await booksCollection.updateOne(
+        {_id: bookId},
+        {$set: {reviews: bookRemovedReview.reviews}}
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
+
+    id = "" + id;
+
+    return {
+        "reviewId": id,
+        "deleted": true
+    };
 }
 
 module.exports = {
     create,
-    get,
+    getById,
     getAll,
     remove
 };

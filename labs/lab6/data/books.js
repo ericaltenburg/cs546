@@ -2,6 +2,7 @@ const mongoCollections = require('../config/mongoCollections');
 const books = mongoCollections.books;
 const moment = require('moment');
 let { ObjectId } = require('mongodb');
+const reviewsData = require('./reviews');
 
 
 /**
@@ -46,6 +47,8 @@ function checkIsProperArr (arr) {
  * @param {object} obj 
  */
 function isEmpty (obj) {
+    if (obj === undefined || obj === null) throw `Error: object does not exist`;
+    if (typeof obj !== 'object' || obj === null) throw `Error: ${obj} is not an object`;
     for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
             return false;
@@ -60,8 +63,6 @@ function isEmpty (obj) {
  * @param {Object} obj 
  */
 function checkIsProperObj (obj) {
-    if (obj === undefined || obj === null) throw `Error: object does not exist`;
-    if (typeof obj !== 'object' || obj === null) throw `Error: ${obj} is not an object`;
     if (isEmpty(obj)) throw "Error: object is empty";
     if (!("authorFirstName" in obj)) throw `Error: object is missing author's first name`;
     checkIsProperString(obj['authorFirstName']);
@@ -79,20 +80,19 @@ function checkIsProperDate (date) {
 }
 
 /**
- * Creates a book with the given object
- * @param {Object} obj 
+ * Creates a new array
+ * @param {string} title 
+ * @param {object} author 
+ * @param {array} genre 
+ * @param {date} datePublished 
+ * @param {string} summary 
  */
-async function create (obj) {
-    let title = obj.title;
+async function create (title, author, genre, datePublished, summary) {
     checkIsProperString(title);
     title = title.trimStart();
-    let author = obj.author;
     checkIsProperObj(author);
-    let genre = obj.genre;
     checkIsProperArr(genre);
-    let datePublished = obj.datePublished;
     checkIsProperDate(datePublished); // This might not work js
-    let summary = obj.summary;
     checkIsProperString(summary);
     summary = summary.trimStart();
 
@@ -157,10 +157,68 @@ async function getAll() {
 }   
 
 /**
- * Updates the book entry with new data
+ * Updates book with the respective information, reviews does not change, they are carried over.
+ * @param {object} obj 
  */
-async function update () {
-    console.log("IMPLEMENT ME");
+async function update (id, obj) {
+    checkIsProperString(id);
+    id = id.trimStart();
+
+    const booksCollection = await books();
+    const oldBook = await get(id);
+
+    isEmpty(obj);
+    let title = obj.title;
+    let author = obj.author;
+    let genre = obj.genre;
+    let datePublished = obj.datePublished;
+    let summary = obj.summary;
+
+    if (title) {
+        checkIsProperString(title);
+        title = title.trimStart();
+    }
+    if (author) checkIsProperObj(author);
+    if (genre) {
+        checkIsProperArr(genre);
+
+        oldBook.genre.forEach( (value) => { // make sure no duplicates
+            let isSame = false;
+            genre.forEach( (value1) => {
+                if (value === value1) {
+                    isSame = true;
+                }
+            });
+
+            if (!isSame) {
+                genre.push(value);
+            }
+        });
+    }
+    if (datePublished) checkIsProperDate(datePublished)
+    if (summary) {
+        checkIsProperString(summary);
+        summary = summary.trimStart();
+    }
+
+    let newBook = {
+        "title": (!title) ? oldBook.title : title,
+        "author": (!author) ? oldBook.author : author,
+        "genre": (!genre) ? oldBook.genre : genre,
+        "datePublished": (!datePublished) ? oldBook.datePublished : datePublished,
+        "summary": (!summary) ? oldBook.summary : summary,
+        "reviews": oldBook.reviews
+    }
+
+    id = ObjectId(id).valueOf();
+    const updateInfo = await booksCollection.updateOne(
+        {_id: id},
+        {$set: newBook}
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
+    
+    id = "" + id;
+    return this.get(id);
 }
 
 /**
@@ -174,13 +232,21 @@ async function remove (id) {
     const booksCollection = await books();
 
     const deletedBook = await get(id);
-    let name = deletedBook.title;
+    let reviewsToDelete = deletedBook.reviews;
     id = ObjectId(id);
+
+    reviewsToDelete.forEach( (id) => { // remove the reviews
+        reviewsData.remove(id);
+    });
 
     const deletedInfo = await booksCollection.deleteOne({_id: id});
     if (deletedInfo.deletedCount === 0) throw `Error: could not delete the book with the id ${id}`;
+    id = id + "";
 
-    return `${name} has been successfully deleted.`;
+    return {
+        "bookId": id,
+        "deleted": true
+    };
 }
 
 module.exports = {
