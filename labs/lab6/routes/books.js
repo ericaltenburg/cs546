@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const booksData = data.books;
+const reviewsData = data.reviews;
 
 /**
  * in the root for books, it will return all the books in the db

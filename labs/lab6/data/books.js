@@ -178,7 +178,18 @@ async function update (id, obj) {
         checkIsProperString(title);
         title = title.trimStart();
     }
-    if (author) checkIsProperObj(author);
+    if (author){ 
+        if (!author.authorFirstName && !author.authorLastName) throw `Error: no first name or last name`;
+        if (isEmpty(author)) throw `Error: nothing given for author`;
+        if (!author.authorFirstName) {
+            checkIsProperString(author.authorLastName);
+            author.authorFirstName = oldBook.author.authorFirstName;
+        }
+        if (!author.authorLastName) {
+            checkIsProperString(author.authorFirstName);
+            author.authorLastName = oldBook.author.authorLastName;
+        }
+    }
     if (genre) {
         checkIsProperArr(genre);
 

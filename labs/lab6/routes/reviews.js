@@ -5,7 +5,7 @@ const reviews = require('../data/reviews');
 const reviewsData = data.reviews;
 const booksData = data.books;
 
-router.get('/', async (req, res) => {
+router.get('/:id', async (req, res) => {
     if (!req.params.id) {
         res.status(400).json({ error: 'You must supply an id' });
         return;
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
         const reviewsList = await reviewsData.getAll(req.params.id);
         res.status(200).json(reviewsList);
     } catch (e) {
-        
+        res.status(404).json({error: "Book with that id could not be found"});
     }
 });
 
@@ -66,7 +66,7 @@ router.post('/:id', async (req, res) => {
     }
 });
 
-router.get('/id/:id', async (req, res) => {
+router.get('/:tag/:id', async (req, res) => {
     if (!req.params.id) {
         res.status(400).json({ error: 'You must supply an id' });
         return;
@@ -80,12 +80,12 @@ router.get('/id/:id', async (req, res) => {
     }
 });
 
-router.delete('/id/:id', async (req, res) => {
+router.delete('/:tag/:id', async (req, res) => {
     if (!req.params.id) {
         res.status(400).json({ error: 'You must supply an id' });
         return;
     }
-
+    
     try {
         const removedReview = await reviewsData.remove(req.params.id);
         res.status(200).json(removedReview);

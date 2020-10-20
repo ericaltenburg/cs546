@@ -3,7 +3,8 @@ const reviews = mongoCollections.reviews;
 const books = mongoCollections.books;
 const moment = require('moment');
 let { ObjectId } = require('mongodb');
-const booksData = require('./books');
+const { update } = require('./books');
+
 
 /**
  * Verifies the string input
@@ -71,16 +72,19 @@ async function create (title, reviewer, bookBeingReviewed, rating, dateOfReview,
 
     const newId = insertInfo.insertedId + "";
 
+    const booksData = require('./books'); // NOICE CIRCULAR DEPENDENCIES
+
     const booksCollection = await books();
-    
     let bookReviewed = await booksData.get(bookBeingReviewed);
     bookReviewed.reviews.push(newId);
 
+    bookBeingReviewed = ObjectId(bookBeingReviewed);
+    
     const updateInfo = await booksCollection.updateOne(
         {_id: bookBeingReviewed},
         {$set: {reviews: bookReviewed.reviews}}
     );
-    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
+    if (updateInfo.modifiedCount === 0) throw `Error: Updated failed`;
 
     const aReview = await this.getById(newId);
 
@@ -135,24 +139,28 @@ async function remove (id) {
     const deletedReview = await getById(id);
     let bookId = deletedReview.bookBeingReviewed;
     id = ObjectId(id);
-    
-    const deletedInfo = await reviewsCollection.deletedOne({_id: id});
+
+    const deletedInfo = await reviewsCollection.removeOne({_id: id});
     if (deletedInfo.deletedCount === 0) throw `Error: could not delete the book with the id ${id}`;
+    id = "" + id;
+
+    
+    const booksData = require('./books'); // Gotta love the dependency loops
 
     const booksCollection = await books();
 
-    let bookRemovedReview = await booksData.getById(bookId);
+    let bookRemovedReview = await booksData.get(bookId);
     bookRemovedReview.reviews = bookRemovedReview.reviews.filter( (value) => {
         return value !== id;
     });
 
+
+    bookId = ObjectId(bookId);
     const updateInfo = await booksCollection.updateOne(
         {_id: bookId},
         {$set: {reviews: bookRemovedReview.reviews}}
     );
     if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Error: Updated failed`;
-
-    id = "" + id;
 
     return {
         "reviewId": id,
