@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
+const static = express.static(__dirname + '/public'); // probably don't need, apparently I do 
 
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
 
+app.use('/public', static); // probably don't need, apparently I do
 app.use(express.json()); // to read request body
 app.use(express.urlencoded({extended: true})); // for form data
 
