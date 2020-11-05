@@ -32,7 +32,7 @@ router.post('/', async (req,res) => {
     }
 
     if (errors.length > 0) {
-        res.render('/shows/search', {term: searchData.searchTerm, hasErrors: true, errors: errors});
+        res.render('shows/search', {thing: "Show Finder", thing2: "Show Finder", para: "Welcome to Show Finder! Here you will be able to toss in any old word and get back a show. Fantastic I hear you saying, and you are correct!", term: searchData.searchTerm, hasErrors: true, errors: errors});
         return;
     }
     try {
