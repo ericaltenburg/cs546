@@ -1,0 +1,65 @@
+.is-prime {
+    color: #00E676;
+}
+
+.not-prime {
+    color: #FF3D00;
+}
+
+
+body {
+    background: #131313;
+    color: whitesmoke;
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 15pt;
+    text-align: center;
+}
+
+button {
+    margin-bottom: 15px;
+}
+
+
+main {
+    max-width: 75%;
+    margin: auto;
+}
+
+li {
+    font-weight: bold;
+}
+
+ol {
+    margin-bottom: 15px;
+}
+
+header {
+    border-bottom: 1px solid #afafaf;
+}
+
+h1{
+    color: whitesmoke;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.me {
+    font-style: italic;
+    font-size: small;
+    color: whitesmoke;
+}
+
+#error-container {
+    margin: auto;
+    width: 50%;
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: #ff6961; /* Red */
+    color: white;
+}
+
+.text-goes-here, .error-message {
+    margin: auto;
+    padding: 4px 0;
+}

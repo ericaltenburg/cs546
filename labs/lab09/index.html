@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="utf-8">
+    <title>Prime Fibonacci</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/site.css">
+</head>
+<body>
+    <h1>Prime Fibonacci</h1>
+    <main>
+        <form method="POST" class="new-search-form" id="form">
+            <label for="number">
+                Enter a number:
+                <input id="number" type="number" name="number" placeholder="Enter a number" class="full-width-input"/>
+            </label>
+            <button type="submit">Submit</button>
+            <div id="error-container" hidden>
+                <div class="text-goes-here error-message">
+                </div>
+            </div>
+            <div id="result-container">
+                <ol id="results"></ol>
+            </div>
+        </form>
+    </main>
+    <footer class="me">Eric Altenburg | 10443481 | "Boutta blow my paycheck on a new bottle of scotch." -me</footer>
+
+    <script src="/public/js/fibo.js"></script>
+</body>
+</html>
