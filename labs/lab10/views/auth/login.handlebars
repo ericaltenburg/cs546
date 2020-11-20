@@ -1,11 +1,20 @@
-<form id="login-form" method="POST" action="/home">
+<form id="login-form" method="POST" action="/login">
     <label for="username">
         Username:
         <input id="username" type="text" name="username" value="{{term}}"/>
     </label>
     <label for="password">
         Password:
-        <input id="password" type="text" name="password"/>
+        <input id="password" type="password" name="password"/>
     </label>
     <button type="submit">login</button>
 </form>
+{{#if hasErrors}}
+<ul class="error-list">
+    {{#each errors}}
+    <li>
+        {{this}}
+    </li>
+    {{/each}}
+</ul>
+{{/if}}
