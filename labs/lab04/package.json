@@ -1,7 +1,7 @@
 {
   "name": "lab4",
   "version": "1.0.0",
-  "description": "cs546 lab4",
+  "description": "cs546 lab4 resubmission",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

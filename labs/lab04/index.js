@@ -1,5 +1,6 @@
 const movies = require('./data/movies');
 const connection = require('./config/mongoConnection');
+const { remove } = require('./data/movies');
 
 async function main() {
 
@@ -31,6 +32,7 @@ async function main() {
 
     console.log("\n9. Remove the second movie you created.");
     const removeSecond = await movies.remove(dark._id.toString());
+    console.log(removeSecond);
 
     console.log("\n10. Query all movies, and log them all");
     const secondAll = await movies.getAll();
