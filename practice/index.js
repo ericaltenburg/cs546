@@ -1,3 +1,4 @@
+const xss = require('xss');
 let arr1 = [5, 4, 1, 2, 3];
 let i = 0;
 let nextNum = 0;
@@ -13,3 +14,7 @@ for (i = 0, nextNum = 1; sorted.length < arr1.length; i++, visited++) {
 }
 console.log(sorted);
 console.log(visited);
+
+let desc = "<script> alert(\"hello1\");</script>";
+console.log(desc);
+console.log(xss(desc));
